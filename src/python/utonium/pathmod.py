@@ -116,31 +116,6 @@ def getEnvVarPaths(env_var_name):
     return env_paths
 
 
-
-# Reconstruct the list of paths into a single string
-# with the appropriate path separator
-def joinEnvPaths(env_paths):
-    if len(env_paths) > 1:
-        return(string.join(env_paths, os.path.pathsep))
-    elif len(env_paths) == 1:
-        return(env_paths[0])
-    else:
-        return ""
-
-# Look for the path already in the environment variable and
-# remove it, returning the remaining elements in a list.
-# exposed commands
-def hasPath(env_var, testPath):
-    if env_var in os.environ:
-        if len(os.environ[env_var]):
-            tmp_paths = string.split(os.environ[env_var], os.path.pathsep)
-            if len(tmp_paths):
-                for tmp_path in tmp_paths:
-                    if pathMatches(tmp_path, testPath):
-                        return True
-    return False
-    
-
 class PathmodError(Exception):
     pass
 
@@ -149,40 +124,4 @@ class PathmodError(Exception):
 # Module test harness
 # ---------------------------------------------------------------------------------------------
 if __name__ == "__main__":
-
     sys.exit(0)
-
-#    # Contrive some paths to append, prepend and delete
-#    pathAppendTest = '/am/after_bin'
-#    pythonPathPrependTest = '/am/before_python'
-#
-#    # Append
-#    print 'Appending', pathAppendTest, 'to PATH'
-#    modified_path = appendPath('PATH', pathAppendTest)
-#    print modified_path
-#    
-#    # Prepend
-#    print 'Prepending', pythonPathPrependTest, 'to PYTHONPATH'
-#    modified_path = prependPath('PYTHONPATH', pythonPathPrependTest)
-#    print modified_path
-#    
-#    # Delete (Want this test to be non-intrusive, so pick an element
-#    # from the existing path, rather than trying to set something known)
-#    if ( not os.environ.has_key('PATH') ):
-#        print "PATH is not set - is this expected?"
-#        sys.exit(1)
-#        
-#    originalPath = os.environ['PATH']
-#    
-#    if ( len(originalPath) > 0 ): # if PATH is NULL, we have bigger problems...
-#        pathElements = string.split(originalPath, os.path.pathsep)
-#        elementToDelete = pathElements[0]
-#        if ( len(pathElements) > 1 ):
-#            elementToDelete = pathElements[1]
-#            
-#        print 'Deleting', elementToDelete, 'from PATH'
-#        modified_path = deletePath('PATH', elementToDelete)
-#        print modified_path
-#    else:
-#        print "PATH is empty - is this expected?"
-#        sys.exit(1)
