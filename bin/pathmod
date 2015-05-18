@@ -1,0 +1,86 @@
+#!/usr/bin/env python
+"""
+pathmod
+
+A tool for modifying environment variables that are a list of colon-separated paths.
+
+Copyright 2015 Kevin Cureton
+"""
+# ---------------------------------------------------------------------------------------------
+# Imports
+# ---------------------------------------------------------------------------------------------
+import argparse
+import logging
+import os
+import sys
+
+SCRIPT_HOME = os.path.normpath(os.path.dirname(sys.argv[0]))
+sys.path.append(os.path.join(SCRIPT_HOME, "..", "src", "python"))
+
+import utonium.pathmod
+
+# ---------------------------------------------------------------------------------------------
+# Globals
+# ---------------------------------------------------------------------------------------------
+EXIT_STATUS_OK = 0
+EXIT_STATUS_ERROR = 1
+
+PATHMOD_APPEND = "append"
+PATHMOD_PREPEND = "prepend"
+PATHMOD_DELETE = "delete"
+
+VALID_PATHMOD_ACTIONS = [
+    PATHMOD_APPEND,
+    PATHMOD_PREPEND,
+    PATHMOD_DELETE
+]
+
+# ---------------------------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------------------------
+def main():
+    try:
+        logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
+        parser = argparse.ArgumentParser()
+        parser_group = parser.add_mutually_exclusive_group()
+        parser_group.add_argument("--append",
+                            help="Append the path to given environment variable",
+                            action="store_const", const=PATHMOD_APPEND, default=None, dest="pathmod_action")
+        parser_group.add_argument("--prepend",
+                            help="Prepend the path to given environment variable",
+                            action="store_const", const=PATHMOD_PREPEND, default=None, dest="pathmod_action")
+        parser_group.add_argument("--delete",
+                            help="Delete the path from the given environment variable",
+                            action="store_const", const=PATHMOD_DELETE, default=None, dest="pathmod_action")
+        parser.add_argument('env_var_name', nargs=1)
+        parser.add_argument('path', nargs=1)
+
+        args = parser.parse_args()
+
+        if not args.pathmod_action:
+            parser.error("No action specified. Please use --append, --prepend, or --delete")
+
+        if not args.pathmod_action in VALID_PATHMOD_ACTIONS:
+            parser.error("Invalid action specified. Please use --append, --prepend, or --delete")
+
+        new_paths = utonium.pathmod.modifyPathsForEnvVar(args.pathmod_action, args.env_var_name[0], args.path[0])
+        print(new_paths)
+
+    except utonium.pathmod.PathmodError, e:
+        print(e)
+        return EXIT_STATUS_ERROR
+
+    except argparse.ArgumentError, e:
+        print(e)
+        return EXIT_STATUS_ERROR
+
+#    except Exception, e:
+#        raise
+
+    return EXIT_STATUS_OK
+
+
+if __name__ == '__main__':
+    exit_status = main()
+    sys.exit(exit_status)
