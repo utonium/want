@@ -1,0 +1,7 @@
+#!/bin/sh
+
+test_bin_dir=`dirname $0`
+test_dir="${test_bin_dir}/../integration/"
+
+cd ${test_dir}
+nosetests $*
