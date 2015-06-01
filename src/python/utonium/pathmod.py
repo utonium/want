@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-pathmod
+utonium/pathmod.py
 
 Core module for the command-line tool of the same name. pathmod's purpose is to manipulate
 colon-separated string, which are typically used to store lists of paths in the environment.
@@ -54,7 +54,7 @@ def modifyPathsForEnvVar(action, env_var_name, path, should_set_env_var=False):
     if len(modified_paths) == 1:
         joined_paths = modified_paths[0]
     elif len(modified_paths) > 1:
-        joined_paths = string.join(modified_paths, os.path.pathsep)
+        joined_paths = string.join(modified_paths, os.pathsep)
 
     if should_set_env_var:
         os.environ[env_var_name] = joined_paths
@@ -112,7 +112,7 @@ def getEnvVarPaths(env_var_name):
     env_paths = list()
     if env_var_name in os.environ:
         if len(os.environ[env_var_name]):
-            env_paths = string.split(os.environ[env_var_name], os.path.pathsep)
+            env_paths = string.split(os.environ[env_var_name], os.pathsep)
     return env_paths
 
 
