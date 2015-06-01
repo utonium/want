@@ -1,0 +1,119 @@
+#!/usr/bin/env python
+"""
+_want
+
+A tool for easily constructing complex shell environments.
+
+Copyright 2015 Kevin Cureton
+"""
+# ---------------------------------------------------------------------------------------------
+# Imports
+# ---------------------------------------------------------------------------------------------
+import argparse
+import logging
+import os
+import string
+import sys
+
+SCRIPT_HOME = os.path.normpath(os.path.dirname(sys.argv[0]))
+sys.path.append(os.path.join(SCRIPT_HOME, "..", "src", "python"))
+
+import utonium.want
+
+# ---------------------------------------------------------------------------------------------
+# Globals
+# ---------------------------------------------------------------------------------------------
+EXIT_OK = 0
+EXIT_ERROR = 1
+
+# ---------------------------------------------------------------------------------------------
+# Code
+# ---------------------------------------------------------------------------------------------
+def main():
+    """ Please run "_want -help" for more information on this tool.
+    """
+    try:
+        logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
+        parser = argparse.ArgumentParser()
+        parser_group = parser.add_mutually_exclusive_group()
+        parser_group.add_argument("--list",
+                                  help="list all the want snippet found on the path",
+                                  action="store_true", default=False, dest="list_snippets")
+        parser_group.add_argument("--which",
+                                  help="display which want snippet would be wanted",
+                                  action="store", nargs=1, default=None, dest="which_snippet", metavar="<snippet>")
+        parser_group.add_argument("--where",
+                                  help="display what want snippets are found in priority order",
+                                  action="store", nargs=1, default=None, dest="where_snippet", metavar="<snippet>")
+        parser_group.add_argument("--wanted",
+                                  help="display all the wanted snippets",
+                                  action="store", nargs='?', default=None, dest="wanted_snippets", metavar="<snippet>")
+        parser_group.add_argument("--name",
+                                  help="display the name of the want snippet",
+                                  action="store", nargs=1, default=None, dest="name_snippet", metavar="<snippet>")
+        parser_group.add_argument("--version",
+                                  help="display the version of the want snippet",
+                                  action="store", nargs=1, default=None, dest="version_snippet", metavar="<snippet>")
+        parser_group.add_argument("--want",
+                                  help="Emits shell language for the specified want snippet",
+                                  action="store", nargs=2, default=None, dest="want", metavar="<snippet> <shell>")
+        parser_group.add_argument("--unwant",
+                                  help="Emits shell language (for unwanting) for the specified want snippet",
+                                  action="store", nargs=2, default=None, dest="unwant", metavar="<snippet> <shell>")
+
+        args = parser.parse_args()
+
+        if args.list_snippets:
+            snippets = utonium.want.listSnippets()
+            for snippet in snippets:
+                print(snippet)
+
+        elif args.which_snippet is not None:
+            snippet_path = utonium.want.whichSnippet(args.which_snippet[0])
+            print(snippet_path)
+
+        elif args.where_snippet is not None:
+            snippet_paths = utonium.want.whereSnippet(args.where_snippet[0])
+            for item in snippet_paths:
+                print(item)
+
+        elif args.wanted_snippets is not None:
+            snippets = utonium.want.wantedSnippets(args.wanted_snippets[0])
+            for item in snippets:
+                print(item)
+
+        elif args.name_snippet is not None:
+            first_part, version_part = utonium.want.parseSnippet(args.name_snippet[0])
+            print(first_part)
+
+        elif args.version_snippet is not None:
+            first_part, version_part = utonium.want.parseSnippet(args.version_snippet[0])
+            print(version_part)
+
+        elif args.want is not None:
+            utonium.want.wantSnippet(*args.want)
+
+        elif args.unwant is not None:
+            utonium.want.unwantSnippet(*args.unwant)
+
+        else:
+            print("UNKNOWN COMMAND")
+            return EXIT_ERROR
+
+        return EXIT_OK
+
+    except argparse.ArgumentError, e:
+        print(str(e))
+        return EXIT_ERROR
+
+    except utonium.want.WantError, e:
+        print(str(e))
+        return EXIT_ERROR
+
+# ---------------------------------------------------------------------------------------------
+# Execute the main routine and exit with the specified return value.
+# ---------------------------------------------------------------------------------------------
+if __name__ == "__main__":
+    exit_status = main()
+    sys.exit(exit_status)
