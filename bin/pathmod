@@ -39,8 +39,9 @@ VALID_PATHMOD_ACTIONS = [
 # Main
 # ---------------------------------------------------------------------------------------------
 def main():
+    logger = None
     try:
-        logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+        logging.basicConfig(stream=sys.stdout, level=logging.WARNING)
 
         parser = argparse.ArgumentParser()
         parser_group = parser.add_mutually_exclusive_group()
