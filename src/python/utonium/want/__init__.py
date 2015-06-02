@@ -4,6 +4,15 @@ utonium/want/__init__.py
 
 Primary Python API for the want system.
 
+The want tools use two environment variables. They are
+
+    UTONIUM_WANT_PATH
+    A colon-separated list of paths where snippets can be found.
+
+    UTONIUM_WANTED_SNIPPETS
+    A colon-separated list of the snippets that have been previously
+    want'd.
+
 Copyright 2015 Kevin Cureton
 """
 # ---------------------------------------------------------------------------------------------
@@ -78,10 +87,16 @@ def whereSnippet(snippet):
     logger.debug("Called whereSnippet(%s)..." % snippet)
 
 
-def wantedSnippets(snippet):
+def wantedSnippets():
     """ Generate a list of snippets that have been wanted.
     """
     logger.debug("Called wantedSnippet(%s)..." % snippet)
+
+    wanted = list()
+    if 'UTONIUM_WANTED_SNIPPETS' in os.environ:
+        wanted = string.split(os.environ['UTONIUM_WANTED_SNIPPETS'], os.pathsep)
+
+    return wanted
 
 
 def parseSnippet(snippet):
@@ -140,12 +155,16 @@ def __findSnippet(desired_snippet):
     return snippet_path
 
 
-def __walkSnippet(snippet, recurse=True):
+def __walkSnippet(snippet, recurse=True, walked_snippets=None):
     """ Open the snippet, parse it's contents, and process it.
     """
     logger.debug("Walking snippet '%s'..." % snippet)
 
     commands = list()
+
+    if walked_snippets is not None:
+        logger.debug("Appending snippet %s" % snippet)
+        walked_snippets.append(snippet)
 
     snippet_path = __findSnippet(snippet)
     if snippet_path:
@@ -162,14 +181,13 @@ def __walkSnippet(snippet, recurse=True):
 
             if cmd['action'] == emitters.base.ACTION_WANT:
                 if recurse:
-                    commands += __walkSnippet(cmd['params'][0])
+                    commands += __walkSnippet(cmd['params'][0], recurse=recurse, walked_snippets=walked_snippets)
                     continue
             else:
                 commands.append(cmd)
     else:
         msg = "Unable to find snippet '%s'" % snippet
         raise WantError(msg)
-
 
     return commands
 
@@ -202,17 +220,11 @@ def __parseLine(line, snippet_path):
 def __emitCommandsForShell(snippet, emitter_type, should_unwant=False):
     """ Emit the commands for the specified emitter type.
     """
-    # TODO: Emit commands to update the following env var.
-    #    if not 'UTONIUM_WANTED_SNIPPETS' in os.environ:
-    #        print("GOT HERE 1")
-    #        os.environ['UTONIUM_WANTED_SNIPPETS'] = snippet
-    #    else:
-    #        print("GOT HERE 2")
-    #        os.environ['UTONIUM_WANTED_SNIPPETS'] = os.environ['UTONIUM_WANTED_SNIPPETS'] + os.pathsep + snippet
+    walked_snippets = list()
+    commands = __walkSnippet(snippet, recurse=True, walked_snippets=walked_snippets)
+    logger.debug("WALKED: %s" % walked_snippets)
 
-    commands = __walkSnippet(snippet)
-
-    emitter = emitters.spawnEmitter(emitter_type, commands)
+    emitter = emitters.spawnEmitter(emitter_type, commands, walked_snippets)
     emitter.emit(unwant=should_unwant)
 
 

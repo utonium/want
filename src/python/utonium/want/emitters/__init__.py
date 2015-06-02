@@ -39,8 +39,12 @@ VALID_EMITTERS = set([
 # ---------------------------------------------------------------------------------------------
 # Factory method for instantiating emitters
 # ---------------------------------------------------------------------------------------------
-def spawnEmitter(emitter_type, commands):
+def spawnEmitter(emitter_type, commands, snippets):
     """ Create an emitter object of the specified type.
+
+        emitter_type: governs what shell language is output
+        commands: list of commands to emit shell language for
+        snippets: list of the snippets the commands came from
     """
     if not emitter_type in VALID_EMITTERS:
         msg = "Unknown emitter type specified: %s" % emitter_type
@@ -56,13 +60,13 @@ def spawnEmitter(emitter_type, commands):
 
     emitter = None
     if emitter_type == EMITTER_NATIVE:
-        emitter = native.Emitter(commands)
+        emitter = native.Emitter(commands, snippets)
     elif emitter_type == EMITTER_PYTHON:
-        emitter = python.Emitter(commands)
+        emitter = python.Emitter(commands, snippets)
     elif emitter_type == EMITTER_SH:
-        emitter = sh.Emitter(commands)
+        emitter = sh.Emitter(commands, snippets)
     elif emitter_type == EMITTER_TCSH:
-        emitter = tcsh.Emitter(commands)
+        emitter = tcsh.Emitter(commands, snippets)
 
     return emitter
 

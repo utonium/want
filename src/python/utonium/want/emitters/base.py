@@ -10,6 +10,7 @@ Copyright 2015 Kevin Cureton
 # Imports
 # ---------------------------------------------------------------------------------------------
 import logging
+import os
 import string
 import sys
 
@@ -39,7 +40,7 @@ VALID_ACTIONS = set([
 # ---------------------------------------------------------------------------------------------
 class BaseEmitter(object):
 
-    def __init__(self, commands):
+    def __init__(self, commands, snippets):
         """ Initialize an emitter object of the specified type with the command list
             that will be emitted.
         """
@@ -47,7 +48,12 @@ class BaseEmitter(object):
             msg = "Invalid type for commands, must be a list"
             raise EmitterError(msg)
 
+        if type(snippets) != list:
+            msg = "Invalid type for snippets, must be a list"
+            raise EmitterError(msg)
+
         self.__commands = commands
+        self.__snippets = snippets
 
 
     def emit(self, unwant=False):
@@ -58,13 +64,30 @@ class BaseEmitter(object):
         for command in self.__commands:
             self._emitCommand(command)
 
+        new_wanted_snippets = None
+        if 'UTONIUM_WANTED_SNIPPETS' in os.environ:
+            current_wanted_snippets = string.split(os.environ['UTONIUM_WANTED_SNIPPETS'], os.pathsep)
+            new_wanted_snippets = self.__snippets + current_wanted_snippets
+        else:
+            new_wanted_snippets = self.__snippets
+
+        new_wanted_snippets = sorted(list(set(new_wanted_snippets)))
+        wanted_snippets = string.join(new_wanted_snippets, os.pathsep)
+
+        command = dict()
+        command['action'] = ACTION_VAR_SET
+        command['params'] = list()
+        command['params'].append('UTONIUM_WANTED_SNIPPETS')
+        command['params'].append(wanted_snippets)
+
+        self._emitCommand(command)
+
 
     def _emitCommand(self, command):
         """ Emit shell language for the given command.
         """
         logger.error("The _emitCommand method must be overridden in the specific emitter.")
         raise NotImplemented
-        
 
 
 class EmitterError(Exception):
