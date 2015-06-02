@@ -33,7 +33,8 @@ def main():
     """ Please run "_want -help" for more information on this tool.
     """
     try:
-        logging.basicConfig(stream=sys.stdout, level=logging.WARNING)
+        logging.basicConfig(stream=sys.stderr, level=logging.WARNING)
+        #logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
         parser = argparse.ArgumentParser()
         parser_group = parser.add_mutually_exclusive_group()
@@ -78,8 +79,8 @@ def main():
             for item in snippet_paths:
                 print(item)
 
-        elif args.wanted_snippets is not None:
-            snippets = utonium.want.wantedSnippets(args.wanted_snippets[0])
+        elif args.wanted_snippets:
+            snippets = utonium.want.wantedSnippets()
             for item in snippets:
                 print(item)
 
@@ -98,7 +99,7 @@ def main():
             utonium.want.unwantSnippet(*args.unwant)
 
         else:
-            print("UNKNOWN COMMAND")
+            print("Please specify a valid command")
             return EXIT_ERROR
 
         return EXIT_OK
