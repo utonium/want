@@ -5,9 +5,8 @@
 # Copyright Kevin Cureton
 #
 
-umask 002
-
-# Figure out what kind of OS this is...
+# Figure out what kind of OS this is. Used to find any compiled things.
+# Thinking forward to a compiled version of pathmod.
 export UTONIUM_WANT_OS=`uname -s`
 export UTONIUM_WANT_ARCH=`uname -m`
 export UTONIUM_WANT_OSARCH="${UTONIUM_WANT_OS}.${UTONIUM_WANT_ARCH}"
@@ -16,19 +15,22 @@ export UTONIUM_WANT_OSARCH="${UTONIUM_WANT_OS}.${UTONIUM_WANT_ARCH}"
 #export UTONIUM_WANT_ROOT=${UTONIUM_WANT_ROOT:="/opt/utonium/want"}
 export UTONIUM_WANT_ROOT=${UTONIUM_WANT_ROOT:="~/Documents/work/github/want"}
 
-# Necessary paths.
+# Necessary paths added the old-fashion way. It's safe to assume PATH is
+# already set. Bigger problems exist if it isn't. :)
 export PATH="${UTONIUM_WANT_ROOT}/bin:${PATH}"
 
-# Give Python some initial config so that pathmod can run.
-# TODO: Check to make sure it isn't already set.
-export PYTHONPATH="${UTONIUM_WANT_ROOT}/src/python:${PYTHONPATH}"
+# Give Python some initial config so scripts can find want Python modules.
+export PYTHONPATH=`pathmod --append PYTHONPATH ${UTONIUM_WANT_ROOT}/src/python`
 
-# New want paths. These go on first to have highest precedence.
-export UTONIUM_WANT_PATH=`pathmod UTONIUM_WANT_PATH --append ${UTONIUM_WANT_ROOT}/snippets`
+# New want paths. Snippets included with the source are added at the
+# end of the list.
+export UTONIUM_WANT_PATH=`pathmod --append UTONIUM_WANT_PATH ${UTONIUM_WANT_ROOT}/snippets`
 
 test -e ${HOME}/want
 if [ $? == 0 ]; then
-    export UTONIUM_WANT_PATH=`pathmod UTONIUM_WANT_PATH --prepend ${HOME}/want`
+    # Goes on the list first. Which means anything in your ${HOME}/want will be
+    # found first by the want command.
+    export UTONIUM_WANT_PATH=`pathmod --prepend UTONIUM_WANT_PATH ${HOME}/want`
 fi
 
 # Special aliases.
