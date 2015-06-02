@@ -33,6 +33,10 @@ if [ $? == 0 ]; then
     export UTONIUM_WANT_PATH=`pathmod --prepend UTONIUM_WANT_PATH ${HOME}/want`
 fi
 
+# Initialize the environment variable that will track what snippets
+# have been wanted.
+export UTONIUM_WANTED_SNIPPETS=""
+
 # Special aliases.
 alias want="source ${UTONIUM_WANT_ROOT}/bin/want.sh"
 alias unwant="source ${UTONIUM_WANT_ROOT}/bin/unwant.sh"
