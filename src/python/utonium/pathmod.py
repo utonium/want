@@ -62,25 +62,33 @@ def modifyPathsForEnvVar(action, env_var_name, path, should_set_env_var=False):
     return joined_paths
 
 
-def prependPathToEnvVar(env_var_name, path_to_prepend):
+def prependPathToEnvVar(env_var_name, path_to_prepend, as_str=False):
     """ Prepend the path to the environment variable's value.
     """
     path_to_prepend = os.path.normpath(path_to_prepend)
     modified_paths = deletePathFromEnvVar(env_var_name, path_to_prepend)
     modified_paths.insert(0, path_to_prepend)
-    return modified_paths
+
+    if as_str:
+        return string.join(modified_paths, os.pathsep)
+    else:
+        return modified_paths
 
  
-def appendPathToEnvVar(env_var_name, path_to_append):
+def appendPathToEnvVar(env_var_name, path_to_append, as_str=False):
     """ Append the path to the environment variable's value.
     """
     path_to_append = os.path.normpath(path_to_append)
     modified_paths = deletePathFromEnvVar(env_var_name, path_to_append)
     modified_paths.append(path_to_append)
-    return modified_paths
+
+    if as_str:
+        return string.join(modified_paths, os.pathsep)
+    else:
+        return modified_paths
 
  
-def deletePathFromEnvVar(env_var_name, path_to_delete):
+def deletePathFromEnvVar(env_var_name, path_to_delete, as_str=False):
     """ Delete the path from the environment variable's value.
     """
     existing_paths = getEnvVarPaths(env_var_name)
@@ -91,7 +99,11 @@ def deletePathFromEnvVar(env_var_name, path_to_delete):
     for path in existing_paths:
         if os.path.normpath(path) != path_to_delete:
             modified_paths.append(path)
-    return modified_paths
+
+    if as_str:
+        return string.join(modified_paths, os.pathsep)
+    else:
+        return modified_paths
 
 
 def hasPathInEnvVar(env_var_name, path):
