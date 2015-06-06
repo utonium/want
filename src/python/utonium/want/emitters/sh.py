@@ -25,7 +25,9 @@ logger = logging.getLogger()
 # ---------------------------------------------------------------------------------------------
 # Code
 # ---------------------------------------------------------------------------------------------
-class Emitter(base.BaseEmitter):
+class ShEmitter(base.BaseEmitter):
+    """ The Sh Emitter emits sh/bash shell language.
+    """
 
     def _emitCommand(self, command):
         """ Emit shell language for the given command.

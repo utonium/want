@@ -50,6 +50,19 @@ def spawnEmitter(emitter_type, commands, snippets):
         msg = "Unknown emitter type specified: %s" % emitter_type
         raise base.EmitterError(msg)
 
+    emitter = None
+    if emitter_type == EMITTER_NATIVE:
+        emitter = native.NativeEmitter(commands, snippets)
+    elif emitter_type == EMITTER_PYTHON:
+        emitter = python.PythonEmitter(commands, snippets)
+    elif emitter_type == EMITTER_SH:
+        emitter = sh.ShEmitter(commands, snippets)
+    elif emitter_type == EMITTER_TCSH:
+        emitter = tcsh.TcshEmitter(commands, snippets)
+
+    return emitter
+
+
     # TODO: Make this dynamic, not a lookup via if.
 #    emitter_module_name = "utnoium.want.emitters.%s" % emitter_type
 #    emitter_module = __import__(emitter_module_name)
@@ -57,18 +70,6 @@ def spawnEmitter(emitter_type, commands, snippets):
 
 #    emitter_module = __import__(emitter_type)
 #    emitter = emitter_module.Emitter(commands)
-
-    emitter = None
-    if emitter_type == EMITTER_NATIVE:
-        emitter = native.Emitter(commands, snippets)
-    elif emitter_type == EMITTER_PYTHON:
-        emitter = python.Emitter(commands, snippets)
-    elif emitter_type == EMITTER_SH:
-        emitter = sh.Emitter(commands, snippets)
-    elif emitter_type == EMITTER_TCSH:
-        emitter = tcsh.Emitter(commands, snippets)
-
-    return emitter
 
 
 # ---------------------------------------------------------------------------------------------
