@@ -1,0 +1,5 @@
+---
+- name: Download 'want' from github
+  git: repo=https://github.com/utonium/want.git
+       dest=/opt/utonium/want
+       version=master
