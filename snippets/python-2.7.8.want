@@ -1,0 +1,2 @@
+var_prepend PATH /opt/python/2.7.8/bin
+var_prepend PYTHONPATH /opt/python/2.7.8/lib
