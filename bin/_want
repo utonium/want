@@ -58,10 +58,10 @@ def main():
                                   action="store", nargs=1, default=None, dest="version_snippet", metavar="<snippet>")
         parser_group.add_argument("--want",
                                   help="Emits shell language for the specified want snippet",
-                                  action="store", nargs=2, default=None, dest="want", metavar="<snippet> <shell>")
+                                  action="store", nargs=2, default=None, dest="want", metavar=("<snippet>", "<shell>"))
         parser_group.add_argument("--unwant",
                                   help="Emits shell language (for unwanting) for the specified want snippet",
-                                  action="store", nargs=2, default=None, dest="unwant", metavar="<snippet> <shell>")
+                                  action="store", nargs=2, default=None, dest="unwant", metavar=("<snippet>", "<shell>"))
 
         args = parser.parse_args()
 
