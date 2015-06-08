@@ -62,14 +62,27 @@ class BaseEmitter(object):
             unwant: If True, will emit commands to unwant instead of want.
         """
         for command in self.__commands:
-            self._emitCommand(command)
+            self._emitCommand(command, unwant=unwant)
 
+        # Update the UTONIUM_WANTED_SNIPPETS environment variable.
         new_wanted_snippets = None
-        if 'UTONIUM_WANTED_SNIPPETS' in os.environ:
-            current_wanted_snippets = string.split(os.environ['UTONIUM_WANTED_SNIPPETS'], os.pathsep)
-            new_wanted_snippets = self.__snippets + current_wanted_snippets
+        if unwant:
+            if 'UTONIUM_WANTED_SNIPPETS' in os.environ:
+                current_wanted_snippets = string.split(os.environ['UTONIUM_WANTED_SNIPPETS'], os.pathsep)
+                new_wanted_snippets = set(current_wanted_snippets) - set(self.__snippets)
+            else:
+                # This should be an error. Unwant should only unwant if the actual
+                # snippets have been previously wanted. Which would mean that
+                # UTONIUM_WANTED_SNIPPETS should be set. Report this as a logic error.
+                msg = "Invalid condition exists when unwanting, no previously wanted snippets"
+                raise EmitterError(msg)
         else:
-            new_wanted_snippets = self.__snippets
+            if 'UTONIUM_WANTED_SNIPPETS' in os.environ:
+                if os.environ['UTONIUM_WANTED_SNIPPETS']:
+                    current_wanted_snippets = string.split(os.environ['UTONIUM_WANTED_SNIPPETS'], os.pathsep)
+                    new_wanted_snippets = self.__snippets + current_wanted_snippets
+            else:
+                new_wanted_snippets = self.__snippets
 
         new_wanted_snippets = sorted(list(set(new_wanted_snippets)))
         wanted_snippets = string.join(new_wanted_snippets, os.pathsep)

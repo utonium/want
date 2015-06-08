@@ -28,7 +28,7 @@ class TcshEmitter(base.BaseEmitter):
     """ The Tcsh Emitter emits csh/tcsh shell language.
     """
 
-    def _emitCommand(self, command):
+    def _emitCommand(self, command, unwant=False):
         """ Emit shell language for the given command.
         """
         action = command['action']

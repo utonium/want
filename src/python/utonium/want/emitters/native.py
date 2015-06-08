@@ -30,9 +30,12 @@ class NativeEmitter(base.BaseEmitter):
         snippet files.
     """
 
-    def _emitCommand(self, command):
+    def _emitCommand(self, command, unwant=False):
         """ Emit shell language for the given command.
         """
+        # The value of unwant is not useful for 'native' output since this
+        # is just dumping the contents of the want snippets.
+
         action = command['action']
         params = command['params']
 

@@ -29,7 +29,7 @@ class ShEmitter(base.BaseEmitter):
     """ The Sh Emitter emits sh/bash shell language.
     """
 
-    def _emitCommand(self, command):
+    def _emitCommand(self, command, unwant=False):
         """ Emit shell language for the given command.
         """
         action = command['action']
@@ -39,17 +39,26 @@ class ShEmitter(base.BaseEmitter):
         if action == base.ACTION_VAR_PREPEND:
             env_var_name = params[0]
             path = params[1]
-            the_command = "export %s=`pathmod --prepend %s %s`" % (env_var_name, env_var_name, path)
+            if unwant:
+                the_command = "export %s=`pathmod --delete %s %s`" % (env_var_name, env_var_name, path)
+            else:
+                the_command = "export %s=`pathmod --prepend %s %s`" % (env_var_name, env_var_name, path)
 
         elif action == base.ACTION_VAR_APPEND:
             env_var_name = params[0]
             path = params[1]
-            the_command = "export %s=`pathmod --append %s %s`" % (env_var_name, env_var_name, path)
+            if unwant:
+                the_command = "export %s=`pathmod --delete %s %s`" % (env_var_name, env_var_name, path)
+            else:
+                the_command = "export %s=`pathmod --append %s %s`" % (env_var_name, env_var_name, path)
 
         elif action == base.ACTION_VAR_SET:
             env_var_name = params[0]
             env_var_value = params[1]
-            the_command = "export %s=%s" % (env_var_name, env_var_value)
+            if unwant:
+                the_command = "unset %s" % (env_var_name)
+            else:
+                the_command = "export %s=%s" % (env_var_name, env_var_value)
 
         else:
             msg = "Unknown emitter action: %s" % action

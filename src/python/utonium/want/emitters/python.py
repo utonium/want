@@ -32,7 +32,7 @@ class PythonEmitter(base.BaseEmitter):
         Python, the want API behaves like regular methods.
     """
 
-    def _emitCommand(self, command):
+    def _emitCommand(self, command, unwant=False):
         """ Emit shell language for the given command.
         """
         action = command['action']
@@ -41,18 +41,17 @@ class PythonEmitter(base.BaseEmitter):
         the_command = None
         if action == base.ACTION_VAR_PREPEND:
             env_var_name = params[0]
-            path = params[1]
-            print("NAME: %s, PATH: %s" % (env_var_name, path))
+            path = os.path.expandvars(params[1])
             os.environ[env_var_name] = utonium.pathmod.prependPathToEnvVar(env_var_name, path, as_str=True)
 
         elif action == base.ACTION_VAR_APPEND:
             env_var_name = params[0]
-            path = params[1]
+            path = os.path.expandvars(params[1])
             os.environ[env_var_name] = utonium.pathmod.appendPathToEnvVar(env_var_name, path, as_str=True)
 
         elif action == base.ACTION_VAR_SET:
             env_var_name = params[0]
-            env_var_value = params[1]
+            env_var_value = os.path.expandvars(params[1])
             os.environ[env_var_name] = env_var_value
 
         else:
