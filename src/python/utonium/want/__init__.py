@@ -53,6 +53,8 @@ def listSnippets():
         if not os.path.exists(path):
             continue
         snippets += __getWantSnippets(path)
+
+    snippets = sorted(snippets)
     return snippets
 
 
@@ -90,12 +92,12 @@ def whereSnippet(snippet):
 def wantedSnippets():
     """ Generate a list of snippets that have been wanted.
     """
-    logger.debug("Called wantedSnippet(%s)..." % snippet)
+    logger.debug("Called wantedSnippet()...")
 
     wanted = list()
     if 'UTONIUM_WANTED_SNIPPETS' in os.environ:
-        wanted = string.split(os.environ['UTONIUM_WANTED_SNIPPETS'], os.pathsep)
-
+        if os.environ['UTONIUM_WANTED_SNIPPETS']:
+            wanted = string.split(os.environ['UTONIUM_WANTED_SNIPPETS'], os.pathsep)
     return wanted
 
 
