@@ -1,0 +1,11 @@
+#
+# pipeline-0.0.1.want
+#
+
+# Pipeline setup.
+var_set PIPELINE_ROOT /opt/pipeline
+var_prepend PATH ${PIPELINE_ROOT}/bin
+
+# Packages used by the pipeline.
+want python-2.7.8
+want maya-2010

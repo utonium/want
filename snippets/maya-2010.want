@@ -1,0 +1,2 @@
+var_set MAYA_HOME /Applications/autodesk/maya/2010
+var_append LD_LIBRARY_PATH ${MAYA_HOME}/lib
