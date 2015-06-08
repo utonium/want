@@ -34,7 +34,6 @@ def main():
     """
     try:
         logging.basicConfig(stream=sys.stderr, level=logging.WARNING)
-        #logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
         parser = argparse.ArgumentParser()
         parser_group = parser.add_mutually_exclusive_group()
