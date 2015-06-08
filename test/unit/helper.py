@@ -13,6 +13,8 @@ import os
 import string
 import sys
 
+WANT_ROOT = os.path.abspath(os.path.join("..", ".."))
+sys.path.append(os.path.join(WANT_ROOT, "src", "python"))
 
 # ---------------------------------------------------------------------------------------------
 # Globals

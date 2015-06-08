@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 """
-integration/test_stash.py
-
-Test associated with stash.py module.
+unit/test_0001_pathmod.py
 
 Copyright (c) 2015 Kevin Cureton
 """
@@ -17,20 +15,14 @@ import sys
 
 import helper
 
-#SCRIPT_HOME = os.path.normpath(os.path.dirname(sys.argv[0]))
-#sys.path.append(os.path.join(SCRIPT_HOME, "..", "..", "src", "python"))
-
-sys.path.append("/Users/kcureton/Documents/work/github/want/src/python")
-
-
 import utonium.pathmod
-
 
 # ---------------------------------------------------------------------------------------------
 # Globals
 # ---------------------------------------------------------------------------------------------
-TEST_NAME = "test_0001_pathmod"
+logger = logging.getLogger()
 
+TEST_NAME = "test_0001_pathmod"
 
 # ---------------------------------------------------------------------------------------------
 # Functions
