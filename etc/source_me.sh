@@ -12,8 +12,8 @@ export UTONIUM_WANT_ARCH=`uname -m`
 export UTONIUM_WANT_OSARCH="${UTONIUM_WANT_OS}.${UTONIUM_WANT_ARCH}"
 
 # The location where want lives.
-#export UTONIUM_WANT_ROOT=${UTONIUM_WANT_ROOT:="/opt/utonium/want"}
-export UTONIUM_WANT_ROOT=${UTONIUM_WANT_ROOT:="~/Documents/work/github/want"}
+#export UTONIUM_WANT_ROOT=${UTONIUM_WANT_ROOT:="~/Documents/work/github/want"}
+export UTONIUM_WANT_ROOT=${UTONIUM_WANT_ROOT:="/opt/utonium/want"}
 
 # Necessary paths added the old-fashion way. It's safe to assume PATH is
 # already set. Bigger problems exist if it isn't. :)

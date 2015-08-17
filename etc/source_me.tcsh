@@ -12,8 +12,8 @@ setenv UTONIUM_WANT_ARCH `uname -m`
 setenv UTONIUM_WANT_OSARCH "${UTONIUM_WANT_OS}.${UTONIUM_WANT_ARCH}"
 
 # The location where want lives.
-#setenv UTONIUM_WANT_ROOT "/opt/utonium/want"
-setenv UTONIUM_WANT_ROOT "~/Documents/work/github/want"
+#setenv UTONIUM_WANT_ROOT "~/Documents/work/github/want"
+setenv UTONIUM_WANT_ROOT "/opt/utonium/want"
 
 # Necessary paths added the old-fashion way. It's safe to assume PATH is
 # already set. Bigger problems exist if it isn't. :)
