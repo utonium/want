@@ -44,4 +44,4 @@ alias wanted "_want --wanted"
 
 # Special completetions.
 complete want 'p/1/`_want --list_tcsh`/'
-complete unwant 'p/1/`echo $UTONIUM_WANTED_PACKAGES | tr ":" " "`/'
+complete unwant 'p/1/`echo $UTONIUM_WANTED_SNIPPETS | tr ":" " "`/'

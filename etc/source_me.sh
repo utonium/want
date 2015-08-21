@@ -43,16 +43,16 @@ alias unwant="source ${UTONIUM_WANT_ROOT}/bin/unwant.sh"
 alias wanted="_want --wanted"
 
 # Special completetions.
-function want_complete() {
+function cmd_want_complete() {
     local word=${COMP_WORDS[COMP_CWORD]}
     local my_list=`_want --list`
     COMPREPLY=($(compgen -W "${my_list}" -- ${word}))
 }
-complete -F want_complete want
+complete -F cmd_want_complete want
 
-function unwant_complete() {
+function cmd_unwant_complete() {
     local word=${COMP_WORDS[COMP_CWORD]}
-    local my_list=`echo $UTONIUM_WANTED_PACKAGES | tr ":" " "`
+    local my_list=`echo $UTONIUM_WANTED_SNIPPETS | tr ":" " "`
     COMPREPLY=($(compgen -W "${my_list}" -- ${word}))
 }
-complete -F unwant_complete unwant
+complete -F cmd_unwant_complete unwant

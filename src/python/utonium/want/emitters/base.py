@@ -65,7 +65,7 @@ class BaseEmitter(object):
             self._emitCommand(command, unwant=unwant)
 
         # Update the UTONIUM_WANTED_SNIPPETS environment variable.
-        new_wanted_snippets = None
+        new_wanted_snippets = list()
         if unwant:
             if 'UTONIUM_WANTED_SNIPPETS' in os.environ:
                 current_wanted_snippets = string.split(os.environ['UTONIUM_WANTED_SNIPPETS'], os.pathsep)
@@ -81,6 +81,8 @@ class BaseEmitter(object):
                 if os.environ['UTONIUM_WANTED_SNIPPETS']:
                     current_wanted_snippets = string.split(os.environ['UTONIUM_WANTED_SNIPPETS'], os.pathsep)
                     new_wanted_snippets = self.__snippets + current_wanted_snippets
+                else:
+                    new_wanted_snippets = self.__snippets
             else:
                 new_wanted_snippets = self.__snippets
 
