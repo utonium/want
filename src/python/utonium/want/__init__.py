@@ -176,6 +176,7 @@ def __walkSnippet(snippet, recurse=True, walked_snippets=None):
 
         for line in contents:
             if re.search(r'^\s*$', line): continue
+            if re.search(r'^\s*#', line): continue
 
             cmd = __parseLine(line, snippet_path)
             logger.debug("Command action: %s" % cmd['action'])
