@@ -43,11 +43,15 @@ class PythonEmitter(base.BaseEmitter):
             env_var_name = params[0]
             path = os.path.expandvars(params[1])
             os.environ[env_var_name] = utonium.pathmod.prependPathToEnvVar(env_var_name, path, as_str=True)
-
+            if env_var_name == "PYTHONPATH":
+                sys.path.insert(0, path)
+ 
         elif action == base.ACTION_VAR_APPEND:
             env_var_name = params[0]
             path = os.path.expandvars(params[1])
             os.environ[env_var_name] = utonium.pathmod.appendPathToEnvVar(env_var_name, path, as_str=True)
+            if env_var_name == "PYTHONPATH":
+                sys.path.append(path)
 
         elif action == base.ACTION_VAR_SET:
             env_var_name = params[0]
